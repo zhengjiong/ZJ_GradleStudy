@@ -1,1 +1,3 @@
+include ':Study3-SourceSet'
+include ':Study2-SourceSet-excludes'
 include ':study1-debug-realease'

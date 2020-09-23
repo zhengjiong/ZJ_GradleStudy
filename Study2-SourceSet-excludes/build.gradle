@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.zj.study2"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        sourceSets {
+            main {
+                res {
+                    srcDirs{
+                        //这里不需要加src/main/res-debug, 在debug加就可以了
+                        ['src/main/res']//,'src/main/res-debug'
+                        //excludes = ['res-debug/values/strings.xml']
+                    }
+
+
+                }
+                java {
+                    //这里是默认值, 可以不用写
+                    //srcDirs = ['src/main/java']
+                }
+            }
+            debug {
+                res {
+                    srcDirs {
+                        //这里千万不能加'src/main/res',因为这个是main的默认值,
+                        //debug和realease会包含main的属性,加了也没有意义,还会
+                        //造成bug:修改res之后必须clean才行,不然资源不同步.
+                        ['src/main/res-debug']
+
+                        //includes = ['res-debug/values/strings.xml']
+                        //这里加excludes可以排除掉strings.xml,但是只能排除掉当
+                        //前srcDirs定义的目录,不能作用于main.
+                        //excludes = ['res-debug/values/strings.xml']
+                    }
+
+                }
+
+                java {
+                    srcDirs = ['src/main/java-debug']
+                }
+
+            }
+            /*release {
+                setRoot 'build-types/release'
+            }*/
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("../keystore/keystore.jks")
+            storePassword "123456"
+            keyAlias "zj"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("../keystore/keystore.jks")
+            storePassword "123456"
+            keyAlias "zj"
+            keyPassword "123456"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+            debuggable true
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+}
